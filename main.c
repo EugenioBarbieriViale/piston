@@ -19,6 +19,22 @@ int clicked(Vector2 mouse_pos, Rectangle button) {
 	else if (CheckCollisionPointRec(mouse_pos, button) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) return 2;
 }
 
+float isochoric(bool check[], float temp, float vol, float press, float dtemp) {
+	if (check[0] && check[1]) {
+		DrawText("ISOCHORIC TRANSFORMATION", 10,770,20,WHITE);
+		return (temp/(temp-dtemp))*press;
+	}
+	return press;
+}
+
+float isothermic(bool check[], float temp, float vol, float press, float dvol) {
+	if (check[0] && check[1]) {
+		DrawText("ISOTHERMIC TRANSFORMATION", 10,770,20,WHITE);
+		return ((vol-dvol)/vol)*press;
+	}
+	return press;
+}
+
 
 int main() {
 	const int width = 100*scale;
@@ -26,7 +42,7 @@ int main() {
 	const int depth = 90*scale;
 	const float central_y = Y/2-(height+depth)/2;
 
-	float temp = 300.0;
+	float temp = 220.0;
 	float press = 1.01325e5;
 	float vol = 1;
 
@@ -40,12 +56,15 @@ int main() {
 	float vel = 0.0f;
 
 	// Temp, press, vol
-	bool isochoric[] = {false, false, false};
-	bool isotherm[] = {false, false, false};
-	bool isobar[] = {false, false, false};
+	bool check_isochoric[] = {false, false};
+	bool check_isotherm[] = {false, false};
+	bool check_isobar[] = {false, false, false};
+
+	float dvol = vel/267;
+	float dtemp = 0.5/26.7;
 
 
-	InitWindow(X,Y, "Pistone");
+	InitWindow(X,Y, "Piston");
 	SetTargetFPS(60);
 
 	Rectangle piston = {X/2-width/2, central_y, width, height};
@@ -58,29 +77,23 @@ int main() {
 
 	while (!WindowShouldClose()) {
 
-		// Update values of temperature, volume and pressure
-		/* temp = press*vol/(n*R); */
-		/* press = n*R*temp/vol; */
-		/* vol = n*R*temp/press; */
-
-
 		BeginDrawing();
 		ClearBackground(GRAY);
 
 		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
-			vol -= vel/267;
+			vol -= dvol;
 		}
 
 		if (draw_flame) {
 			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
 			DrawText("FLAME", X/2-30, central_y + depth + height + 120, 20,WHITE);
+			if (temp <= 500.f) temp += dtemp;
 		}
 		else {
 			DrawRectangleLinesEx((Rectangle){X/2-width/2-30*scale, Y/2-width/2-30*scale-10, width+60*scale, width+60*scale+10}, 30*scale, (Color){0,155,255,60});
 			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
 		}
-
 
 		// Draw gas in the chamber
 		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
@@ -88,6 +101,13 @@ int main() {
 		// Draw piston and cilinder
 		DrawRectangleRounded(piston, 0.4, 10, WHITE);
 		DrawRectangleLinesEx(cilinder, 4, RED);
+
+		/* if (check_isochoric[0] && check_isochoric[1]) { */
+			/* press = isochoric(check_isochoric, temp, vol, press, dtemp); */
+		/* } if (check_isotherm[0] && check_isotherm[1]) { */
+		/* 	press = isothermic(check_isotherm, temp, vol, press, dvol); */
+		/* } */
+		press = isothermic(check_isotherm, temp, vol, press, dvol);
 
 		// Draw text
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
@@ -106,7 +126,8 @@ int main() {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
-			isochoric[0] = true;
+			check_isochoric[0] = true;
+			check_isotherm[0] = false;
 		}
 		else if (clicked(mouse_pos, button0) == 2) {
 			button_col[0] = RED;
@@ -124,11 +145,14 @@ int main() {
 		if (clicked(mouse_pos, button1) == 1) {
 			button_col[1] = GREEN;
 			draw_flame = true;
-			isochoric[2] = true;
+			check_isochoric[1] = true;
+			check_isotherm[1] = false;
 		}
 		else if (clicked(mouse_pos, button1) == 2) {
 			button_col[1] = RED;
 			draw_flame = false;
+			check_isochoric[1] = false;
+			check_isotherm[1] = true;
 		}
 
 		DrawRectangleRounded(button1, 0.8, 40, button_col[1]);
@@ -142,10 +166,12 @@ int main() {
 			button_col[2] = GREEN;
 			button_col[0] = RED;
 			vel = 0.2f;
+			check_isotherm[0] = true;
 		}
 		else if (clicked(mouse_pos, button2) == 2) {
 			button_col[2] = RED;
 			vel = 0;
+			check_isotherm[0] = false;
 		}
 
 		DrawRectangleRounded(button2, 0.8, 40, button_col[2]);
