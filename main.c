@@ -6,6 +6,9 @@
 
 #define scale 3
 
+#define R 8.31
+#define n 2.5
+
 // Tipi di trasformazioni:
 // ISOTERMA: temperatura costante -> bagno termico
 // ISOCORA: volume costante -> fiamma che scalda e pistone bloccato
@@ -14,10 +17,6 @@
 int clicked(Vector2 mouse_pos, Rectangle button) {
 	if (CheckCollisionPointRec(mouse_pos, button) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return 1;
 	else if (CheckCollisionPointRec(mouse_pos, button) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) return 2;
-}
-
-float isochoric(float ) {
-		
 }
 
 
@@ -29,7 +28,7 @@ int main() {
 
 	float temp = 300.0;
 	float press = 1.01325e5;
-	float vol = 0.01;
+	float vol = 1;
 
 	int MX = GetMouseX();
 	int MY = GetMouseY();
@@ -39,6 +38,11 @@ int main() {
 
 	bool draw_flame = false;
 	float vel = 0.0f;
+
+	// Temp, press, vol
+	bool isochoric[] = {false, false, false};
+	bool isotherm[] = {false, false, false};
+	bool isobar[] = {false, false, false};
 
 
 	InitWindow(X,Y, "Pistone");
@@ -53,10 +57,20 @@ int main() {
 	UnloadImage(flame_img);
 
 	while (!WindowShouldClose()) {
+
+		// Update values of temperature, volume and pressure
+		/* temp = press*vol/(n*R); */
+		/* press = n*R*temp/vol; */
+		/* vol = n*R*temp/press; */
+
+
 		BeginDrawing();
 		ClearBackground(GRAY);
 
-		if (piston.y < central_y + depth - 10) piston.y += vel;
+		if (piston.y < central_y + depth - 10) {
+			piston.y += vel;
+			vol -= vel/267;
+		}
 
 		if (draw_flame) {
 			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
@@ -92,6 +106,7 @@ int main() {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
+			isochoric[0] = true;
 		}
 		else if (clicked(mouse_pos, button0) == 2) {
 			button_col[0] = RED;
@@ -109,6 +124,7 @@ int main() {
 		if (clicked(mouse_pos, button1) == 1) {
 			button_col[1] = GREEN;
 			draw_flame = true;
+			isochoric[2] = true;
 		}
 		else if (clicked(mouse_pos, button1) == 2) {
 			button_col[1] = RED;
