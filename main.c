@@ -60,10 +60,6 @@ int main() {
 	bool check_isotherm[] = {false, false};
 	bool check_isobar[] = {false, false, false};
 
-	float dvol = vel/267;
-	float dtemp = 0.5/26.7;
-
-
 	InitWindow(X,Y, "Piston");
 	SetTargetFPS(60);
 
@@ -79,6 +75,9 @@ int main() {
 
 		BeginDrawing();
 		ClearBackground(GRAY);
+
+		float dtemp = 0.5/26.7;
+		float dvol = vel/267;
 
 		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
@@ -103,11 +102,11 @@ int main() {
 		DrawRectangleLinesEx(cilinder, 4, RED);
 
 		/* if (check_isochoric[0] && check_isochoric[1]) { */
-			/* press = isochoric(check_isochoric, temp, vol, press, dtemp); */
+		press = isochoric(check_isochoric, temp, vol, press, dtemp);
 		/* } if (check_isotherm[0] && check_isotherm[1]) { */
-		/* 	press = isothermic(check_isotherm, temp, vol, press, dvol); */
+			/* press = isothermic(check_isotherm, temp, vol, press, dvol); */
 		/* } */
-		press = isothermic(check_isotherm, temp, vol, press, dvol);
+		/* press = isothermic(check_isotherm, temp, vol, press, dvol); */
 
 		// Draw text
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
@@ -166,6 +165,7 @@ int main() {
 			button_col[2] = GREEN;
 			button_col[0] = RED;
 			vel = 0.2f;
+			check_isochoric[0] = false;
 			check_isotherm[0] = true;
 		}
 		else if (clicked(mouse_pos, button2) == 2) {
