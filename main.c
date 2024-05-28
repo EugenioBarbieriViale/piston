@@ -30,7 +30,7 @@ float isochoric(bool check[], float temp, float vol, float press, float dtemp) {
 float isothermic(bool check[], float temp, float vol, float press, float dvol) {
 	if (check[0] && check[1]) {
 		DrawText("ISOTHERMIC TRANSFORMATION", 10,770,20,WHITE);
-		return ((vol-dvol)/vol)*press;
+		return ((vol+dvol)/vol)*press;
 	}
 	return press;
 }
@@ -57,7 +57,7 @@ int main() {
 
 	// Temp, press, vol
 	bool check_isochoric[] = {false, false};
-	bool check_isotherm[] = {false, false};
+	bool check_isotherm[] = {false, true};
 	bool check_isobar[] = {false, false, false};
 
 	InitWindow(X,Y, "Piston");
@@ -72,7 +72,6 @@ int main() {
 	UnloadImage(flame_img);
 
 	while (!WindowShouldClose()) {
-
 		BeginDrawing();
 		ClearBackground(GRAY);
 
@@ -102,11 +101,16 @@ int main() {
 		DrawRectangleLinesEx(cilinder, 4, RED);
 
 		/* if (check_isochoric[0] && check_isochoric[1]) { */
-		press = isochoric(check_isochoric, temp, vol, press, dtemp);
+		/* 	press = isochoric(check_isochoric, temp, vol, press, dtemp); */
 		/* } if (check_isotherm[0] && check_isotherm[1]) { */
-			/* press = isothermic(check_isotherm, temp, vol, press, dvol); */
+		/* 	press = isothermic(check_isotherm, temp, vol, press, dvol); */
 		/* } */
-		/* press = isothermic(check_isotherm, temp, vol, press, dvol); */
+
+		if (check_isotherm[0] && check_isotherm[1]) {
+			press = isothermic(check_isotherm, temp, vol, press, dvol);
+		} if (check_isochoric[0] && check_isochoric[1]) {
+			press = isochoric(check_isochoric, temp, vol, press, dtemp);
+		}
 
 		// Draw text
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
