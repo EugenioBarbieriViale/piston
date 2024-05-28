@@ -130,6 +130,7 @@ int main() {
 		}
 		else if (clicked(mouse_pos, button0) == 2) {
 			button_col[0] = RED;
+			check_isochoric[0] = false;
 		}
 
 		DrawRectangleRounded(button0, 0.8, 40, button_col[0]);
