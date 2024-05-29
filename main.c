@@ -70,6 +70,8 @@ int main() {
 	ImageResize(&flame_img, 10*scale,20*scale);
 	Texture2D flame_tex = LoadTextureFromImage(flame_img);
 	UnloadImage(flame_img);
+	
+	bool no_transf = false;
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
@@ -93,18 +95,14 @@ int main() {
 			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
 		}
 
+		if (no_transf) DrawText("NO TRANSFORMATION FOUND", X/2, Y/2, 20,RED);
+
 		// Draw gas in the chamber
 		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
 
 		// Draw piston and cilinder
 		DrawRectangleRounded(piston, 0.4, 10, WHITE);
 		DrawRectangleLinesEx(cilinder, 4, RED);
-
-		/* if (check_isochoric[0] && check_isochoric[1]) { */
-		/* 	press = isochoric(check_isochoric, temp, vol, press, dtemp); */
-		/* } if (check_isotherm[0] && check_isotherm[1]) { */
-		/* 	press = isothermic(check_isotherm, temp, vol, press, dvol); */
-		/* } */
 
 		if (check_isotherm[0] && check_isotherm[1]) {
 			press = isothermic(check_isotherm, temp, vol, press, dvol);
@@ -125,7 +123,11 @@ int main() {
 
 		Rectangle button0 = {945, 12, 15, 15};
 
-		if (clicked(mouse_pos, button0) == 1) {
+		bool check_no_transf = (check_isotherm[0] && check_isochoric[1]);
+
+		if (check_no_transf) no_transf = true;
+
+		if (clicked(mouse_pos, button0) == 1 || check_no_transf) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
