@@ -71,7 +71,6 @@ int main() {
 	Texture2D flame_tex = LoadTextureFromImage(flame_img);
 	UnloadImage(flame_img);
 	
-	bool no_transf = false;
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
@@ -94,8 +93,6 @@ int main() {
 			DrawRectangleLinesEx((Rectangle){X/2-width/2-30*scale, Y/2-width/2-30*scale-10, width+60*scale, width+60*scale+10}, 30*scale, (Color){0,155,255,60});
 			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
 		}
-
-		if (no_transf) DrawText("NO TRANSFORMATION FOUND", X/2, Y/2, 20,RED);
 
 		// Draw gas in the chamber
 		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
@@ -124,8 +121,6 @@ int main() {
 		Rectangle button0 = {945, 12, 15, 15};
 
 		bool check_no_transf = (check_isotherm[0] && check_isochoric[1]);
-
-		if (check_no_transf) no_transf = true;
 
 		if (clicked(mouse_pos, button0) == 1 || check_no_transf) {
 			button_col[0] = GREEN;
