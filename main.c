@@ -35,6 +35,14 @@ float isothermic(bool check[], float temp, float vol, float press, float dvol) {
 	return press;
 }
 
+float isobar(bool check[], float temp, float vol, float press, float dtemp) {
+	if (check[0] && check[1]) {
+		DrawText("ISOBAR TRANSFORMATION", 10,770,20,WHITE);
+		return (temp/(temp-dtemp))*vol;
+	}
+	return vol;
+}
+
 
 int main() {
 	const int width = 100*scale;
@@ -58,7 +66,7 @@ int main() {
 	// Temp, press, vol
 	bool check_isochoric[] = {false, false};
 	bool check_isotherm[] = {false, true};
-	bool check_isobar[] = {false, false, false};
+	bool check_isobar[] = {false, false};
 
 	InitWindow(X,Y, "Piston");
 	SetTargetFPS(60);
@@ -107,12 +115,13 @@ int main() {
 			press = isochoric(check_isochoric, temp, vol, press, dtemp);
 		}
 
-		// Draw text
+		vol = isobar(check_isobar, temp, vol, press, dtemp);
+		
+
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
 		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
 		DrawText(TextFormat("Volume: %.2f m3", vol), 10,50,20,WHITE);
 
-		// Options
 		Vector2 mouse_pos = GetMousePosition();
 
 		// Button to block the piston
@@ -128,10 +137,12 @@ int main() {
 			vel = 0;
 			check_isochoric[0] = true;
 			check_isotherm[0] = false;
+			check_isobar[0] = false;
 		}
 		else if (clicked(mouse_pos, button0) == 2) {
 			button_col[0] = RED;
 			check_isochoric[0] = false;
+			check_isobar[0] = true;
 		}
 
 		DrawRectangleRounded(button0, 0.8, 40, button_col[0]);
@@ -142,18 +153,19 @@ int main() {
 
 		Rectangle button1 = {945, 32, 15, 15};
 
-
 		if (clicked(mouse_pos, button1) == 1) {
 			button_col[1] = GREEN;
 			draw_flame = true;
 			check_isochoric[1] = true;
 			check_isotherm[1] = false;
+			check_isobar[1] = true;
 		}
 		else if (clicked(mouse_pos, button1) == 2) {
 			button_col[1] = RED;
 			draw_flame = false;
 			check_isochoric[1] = false;
 			check_isotherm[1] = true;
+			check_isobar[1] = false;
 		}
 
 		DrawRectangleRounded(button1, 0.8, 40, button_col[1]);
@@ -169,11 +181,13 @@ int main() {
 			vel = 0.2f;
 			check_isochoric[0] = false;
 			check_isotherm[0] = true;
+			check_isobar[0] = false;
 		}
 		else if (clicked(mouse_pos, button2) == 2) {
 			button_col[2] = RED;
 			vel = 0;
 			check_isotherm[0] = false;
+			check_isobar[0] = true;
 		}
 
 		DrawRectangleRounded(button2, 0.8, 40, button_col[2]);
