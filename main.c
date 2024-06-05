@@ -9,11 +9,6 @@
 #define R 8.31
 #define n 2.5
 
-// Tipi di trasformazioni:
-// ISOTERMA: temperatura costante -> bagno termico
-// ISOCORA: volume costante -> fiamma che scalda e pistone bloccato
-// ISOBARA: pressione costante
-
 int clicked(Vector2 mouse_pos, Rectangle button) {
 	if (CheckCollisionPointRec(mouse_pos, button) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return 1;
 	else if (CheckCollisionPointRec(mouse_pos, button) && IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) return 2;
@@ -53,6 +48,7 @@ int main() {
 	float temp = 220.0;
 	float press = 1.01325e5;
 	float vol = 1;
+	float area = 2;
 
 	int MX = GetMouseX();
 	int MY = GetMouseY();
@@ -84,8 +80,9 @@ int main() {
 		BeginDrawing();
 		ClearBackground(GRAY);
 
-		float dtemp = 0.5/26.7;
+		float h = vol / area;
 		float dvol = vel/267;
+		float dtemp = 0.5/26.7;
 
 		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
@@ -116,7 +113,6 @@ int main() {
 		}
 
 		vol = isobar(check_isobar, temp, vol, press, dtemp);
-		
 
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
 		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
