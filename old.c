@@ -84,8 +84,7 @@ int main() {
 		float dvol = vel/267;
 		float dtemp = 0.5/26.7;
 
-		printf("pist %f, centr %f\n", piston.y+0.4, central_y - 0.2);
-		if (piston.y < central_y + depth - 10 && piston.y > central_y - 0.2) {
+		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
 			vol -= dvol;
 		}
@@ -113,12 +112,7 @@ int main() {
 			press = isochoric(check_isochoric, temp, vol, press, dtemp);
 		}
 
-		/* float changing_vol = isobar(check_isobar, temp, vol, press, dtemp); */
-		/* float dvol1 = -(vol - changing_vol)*2000; */
-		/* if (check_isobar && !check_isotherm) { */
-		/* 	piston.y -= vel; */
-		/* 	vol += dvol; */
-		/* } */
+		vol = isobar(check_isobar, temp, vol, press, dtemp);
 
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
 		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
@@ -161,7 +155,6 @@ int main() {
 			check_isochoric[1] = true;
 			check_isotherm[1] = false;
 			check_isobar[1] = true;
-			if (check_isobar && !check_isochoric[0]) vel = -0.2f;
 		}
 		else if (clicked(mouse_pos, button1) == 2) {
 			button_col[1] = RED;
@@ -169,7 +162,6 @@ int main() {
 			check_isochoric[1] = false;
 			check_isotherm[1] = true;
 			check_isobar[1] = false;
-			if (check_isobar) vel = 0.f;
 		}
 
 		DrawRectangleRounded(button1, 0.8, 40, button_col[1]);
