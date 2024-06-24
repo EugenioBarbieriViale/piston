@@ -86,11 +86,15 @@ int main() {
 		float dvol = vel/267;
 		float dtemp = 0.5/26.7;
 
-		/* printf("pist %f, centr %f\n", piston.y+0.4, central_y - 0.2); */
-		if (piston.y < central_y + depth - 10 && piston.y > central_y - 0.2) {
+		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
 			vol -= dvol;
 		}
+
+		if (piston.y <= central_y - 0.2) {
+			vel = 0.f;
+			vol = 1.f;
+		} 
 
 		if (heat) {
 			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
@@ -113,7 +117,7 @@ int main() {
 		bool isIsochoric = (blocked && heat && !compress);
 		bool isIsobar = (heat && !blocked && !compress);
 
-		debug(blocked, compress, heat, isIsothermic, isIsochoric, isIsobar);
+		/* debug(blocked, compress, heat, isIsothermic, isIsochoric, isIsobar); */
 
 		if (isIsothermic) {
 			press = isothermic(compress, temp, vol, press, dvol);
@@ -136,8 +140,6 @@ int main() {
 
 		Rectangle button0 = {945, 12, 15, 15};
 
-		/* bool check_no_transf = (compress && heat); */
-
 		if (clicked(mouse_pos, button0) == 1 && !compress) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
@@ -146,6 +148,8 @@ int main() {
 		}
 		else if (clicked(mouse_pos, button0) == 2 && !compress) {
 			button_col[0] = RED;
+			if (isIsobar) vel = -0.2f;
+			else if (isIsothermic) vel = 0.2f;
 			blocked = false;
 		}
 
@@ -156,15 +160,20 @@ int main() {
 
 		Rectangle button1 = {945, 32, 15, 15};
 
+		/* printf("check %d, isobar %d\n", heat && !blocked && !compress, isIsobar); */
+		printf("vel %f\n", vel);
 		if (clicked(mouse_pos, button1) == 1 && !compress) {
 			button_col[1] = GREEN;
 			heat = true;
-			if (heat && !blocked && !compress) vel = -0.2f;
+			if (heat && !blocked && !compress) {
+				vel = -0.2f;
+			}
 		}
 		else if (clicked(mouse_pos, button1) == 2 && !compress) {
 			button_col[1] = RED;
 			heat = false;
-			if (!heat || blocked || compress) vel = 0.f;
+			/* if (!heat || blocked || compress) vel = 0.f; */
+			if (!heat) vel = 0.f;
 		}
 
 		DrawRectangleRounded(button1, 0.8, 40, button_col[1]);
