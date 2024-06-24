@@ -22,9 +22,9 @@ float isochoric(bool change, float temp, float vol, float press, float dtemp) {
 	return press;
 }
 
-float isothermic(bool change, float temp, float vol, float press, float dvol) {
+float isotherm(bool change, float temp, float vol, float press, float dvol) {
 	if (change) {
-		DrawText("ISOTHERMIC TRANSFORMATION", 10,770,20,WHITE);
+		DrawText("ISOTHERM TRANSFORMATION", 10,770,20,WHITE);
 		return ((vol+dvol)/vol)*press;
 	}
 	return press;
@@ -38,9 +38,9 @@ float isobar(bool change, float temp, float vol, float press, float dtemp) {
 	return vol;
 }
 
-void debug(bool blocked, bool compress, bool heat, bool isIsothermic, bool isIsochoric, bool isIsobar) {
+void debug(bool blocked, bool compress, bool heat, bool isIsotherm, bool isIsochoric, bool isIsobar) {
 	printf("1true:  blocked:%d -- compress %d -- heat %d\n", blocked, compress, heat);
-	printf("1true:  isotherm:%d -- isochoric %d -- isbar %d\n", isIsothermic, isIsochoric, isIsobar);
+	printf("1true:  isotherm:%d -- isochoric %d -- isbar %d\n", isIsotherm, isIsochoric, isIsobar);
 	printf("\n");
 }
 
@@ -113,14 +113,14 @@ int main() {
 		DrawRectangleRounded(piston, 0.4, 10, WHITE);
 		DrawRectangleLinesEx(cilinder, 4, RED);
 
-		bool isIsothermic = (compress && !blocked && !heat);
+		bool isIsotherm = (compress && !blocked && !heat);
 		bool isIsochoric = (blocked && heat && !compress);
 		bool isIsobar = (heat && !blocked && !compress);
 
-		/* debug(blocked, compress, heat, isIsothermic, isIsochoric, isIsobar); */
+		/* debug(blocked, compress, heat, isIsotherm, isIsochoric, isIsobar); */
 
-		if (isIsothermic) {
-			press = isothermic(compress, temp, vol, press, dvol);
+		if (isIsotherm) {
+			press = isotherm(compress, temp, vol, press, dvol);
 		}
 		if (isIsochoric) {
 			press = isochoric(blocked, temp, vol, press, dtemp);
@@ -149,7 +149,7 @@ int main() {
 		else if (clicked(mouse_pos, button0) == 2 && !compress) {
 			button_col[0] = RED;
 			if (isIsobar) vel = -0.2f;
-			else if (isIsothermic) vel = 0.2f;
+			else if (isIsotherm) vel = 0.2f;
 			blocked = false;
 		}
 
