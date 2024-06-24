@@ -117,8 +117,6 @@ int main() {
 		bool isIsochoric = (blocked && heat && !compress);
 		bool isIsobar = (heat && !blocked && !compress);
 
-		/* debug(blocked, compress, heat, isIsotherm, isIsochoric, isIsobar); */
-
 		if (isIsotherm) {
 			press = isotherm(compress, temp, vol, press, dvol);
 		}
@@ -148,8 +146,9 @@ int main() {
 		}
 		else if (clicked(mouse_pos, button0) == 2 && !compress) {
 			button_col[0] = RED;
-			if (isIsobar) vel = -0.2f;
-			else if (isIsotherm) vel = 0.2f;
+			if (heat) vel = -0.2f;
+			/* else if (isIsotherm) vel = 0.2f; */
+			/* else vel = 0.f; */
 			blocked = false;
 		}
 
@@ -160,8 +159,6 @@ int main() {
 
 		Rectangle button1 = {945, 32, 15, 15};
 
-		/* printf("check %d, isobar %d\n", heat && !blocked && !compress, isIsobar); */
-		printf("vel %f\n", vel);
 		if (clicked(mouse_pos, button1) == 1 && !compress) {
 			button_col[1] = GREEN;
 			heat = true;
