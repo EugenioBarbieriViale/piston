@@ -136,9 +136,9 @@ int main() {
 
 		Rectangle button0 = {945, 12, 15, 15};
 
-		bool check_no_transf = (compress && heat);
+		/* bool check_no_transf = (compress && heat); */
 
-		if (clicked(mouse_pos, button0) == 1 && !compress || check_no_transf) {
+		if (clicked(mouse_pos, button0) == 1 && !compress) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
@@ -156,12 +156,12 @@ int main() {
 
 		Rectangle button1 = {945, 32, 15, 15};
 
-		if (clicked(mouse_pos, button1) == 1) {
+		if (clicked(mouse_pos, button1) == 1 && !compress) {
 			button_col[1] = GREEN;
 			heat = true;
 			if (heat && !blocked && !compress) vel = -0.2f;
 		}
-		else if (clicked(mouse_pos, button1) == 2) {
+		else if (clicked(mouse_pos, button1) == 2 && !compress) {
 			button_col[1] = RED;
 			heat = false;
 			if (!heat || blocked || compress) vel = 0.f;
@@ -174,13 +174,13 @@ int main() {
 
 		Rectangle button2 = {945, 55, 15, 15};
 
-		if (clicked(mouse_pos, button2) == 1 && !blocked) {
+		if (clicked(mouse_pos, button2) == 1 && !blocked && !heat) {
 			button_col[2] = GREEN;
 			button_col[0] = RED;
 			vel = 0.2f;
 			compress = true;
 		}
-		else if (clicked(mouse_pos, button2) == 2 && !blocked) {
+		else if (clicked(mouse_pos, button2) == 2 && !blocked && !heat) {
 			button_col[2] = RED;
 			vel = 0.f;
 			compress = false;
