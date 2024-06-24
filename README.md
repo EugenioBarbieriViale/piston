@@ -6,7 +6,6 @@ When a perfect gas is compressed or heated, its macroscopic characteristics (pre
 
 Here it is a screenshot:
 
-![piston](https://github.com/EugenioBarbieriViale/piston/assets/82298389/46118c8e-6cd1-48aa-a1ae-50e45c7c03a5)
 # How to use it
 There is a command panel at the top right corner. Green means enabled, red means disabled. To enable right-click, to disable left-click. It is possible to display only the following three transformations:
 - ISOCHORIC: the piston is blocked and the flame heats the gas. The pressure starts to increase
