@@ -38,12 +38,6 @@ float isobar(bool change, float temp, float vol, float press, float dtemp) {
 	return vol;
 }
 
-void debug(bool blocked, bool compress, bool heat, bool isIsotherm, bool isIsochoric, bool isIsobar) {
-	printf("1true:  blocked:%d -- compress %d -- heat %d\n", blocked, compress, heat);
-	printf("1true:  isotherm:%d -- isochoric %d -- isbar %d\n", isIsotherm, isIsochoric, isIsobar);
-	printf("\n");
-}
-
 
 int main() {
 	const int width = 100*scale;
@@ -55,13 +49,11 @@ int main() {
 	float press = 1.01325e5;
 	float vol = 1;
 
-	int MX = GetMouseX();
-	int MY = GetMouseY();
-
-	// Buttons color
-	Color button_col[] = {RED, RED, RED};
-
 	float vel = 0.0f;
+	float dvol = vel/267;
+	float dtemp = 0.5/26.7;
+
+	Color button_col[] = {RED, RED, RED};
 
 	bool blocked = false;
 	bool compress = false;
@@ -78,13 +70,8 @@ int main() {
 	Texture2D flame_tex = LoadTextureFromImage(flame_img);
 	UnloadImage(flame_img);
 	
-
 	while (!WindowShouldClose()) {
-		BeginDrawing();
-		ClearBackground(GRAY);
-
-		float dvol = vel/267;
-		float dtemp = 0.5/26.7;
+		Vector2 mouse_pos = GetMousePosition();
 
 		if (piston.y < central_y + depth - 10) {
 			piston.y += vel;
@@ -95,23 +82,6 @@ int main() {
 			vel = 0.f;
 			vol = 1.f;
 		} 
-
-		if (heat) {
-			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
-			DrawText("FLAME", X/2-30, central_y + depth + height + 120, 20,WHITE);
-			if (temp <= 500.f) temp += dtemp;
-		}
-		else {
-			DrawRectangleLinesEx((Rectangle){X/2-width/2-30*scale, Y/2-width/2-30*scale-10, width+60*scale, width+60*scale+10}, 30*scale, (Color){0,155,255,60});
-			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
-		}
-
-		// Draw gas in the chamber
-		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
-
-		// Draw piston and cilinder
-		DrawRectangleRounded(piston, 0.4, 10, WHITE);
-		DrawRectangleLinesEx(cilinder, 4, RED);
 
 		bool isIsotherm = (compress && !blocked && !heat);
 		bool isIsochoric = (blocked && heat && !compress);
@@ -127,72 +97,84 @@ int main() {
 			vol = isobar(heat, temp, vol, press, dtemp);
 		}
 
-		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
-		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
-		DrawText(TextFormat("Volume: %.2f m3", vol), 10,50,20,WHITE);
 
-		Vector2 mouse_pos = GetMousePosition();
+		Rectangle button_block = {945, 12, 15, 15};
 
-		// Button to block the piston
-		DrawText("Block the piston:", X-270,10,20,WHITE);
-
-		Rectangle button0 = {945, 12, 15, 15};
-
-		if (clicked(mouse_pos, button0) == 1 && !compress) {
+		if (clicked(mouse_pos, button_block) == 1 && !compress) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
 			blocked = true;
 		}
-		else if (clicked(mouse_pos, button0) == 2 && !compress) {
+		else if (clicked(mouse_pos, button_block) == 2 && !compress) {
 			button_col[0] = RED;
 			if (heat) vel = -0.2f;
-			/* else if (isIsotherm) vel = 0.2f; */
-			/* else vel = 0.f; */
 			blocked = false;
 		}
 
-		DrawRectangleRounded(button0, 0.8, 40, button_col[0]);
 
-		// Button to heat up the gas
-		DrawText("Heat the gas:", X-270,30,20,WHITE);
+		Rectangle button_heat = {945, 32, 15, 15};
 
-		Rectangle button1 = {945, 32, 15, 15};
-
-		if (clicked(mouse_pos, button1) == 1 && !compress) {
+		if (clicked(mouse_pos, button_heat) == 1 && !compress) {
 			button_col[1] = GREEN;
 			heat = true;
 			if (heat && !blocked && !compress) {
 				vel = -0.2f;
 			}
-		}
-		else if (clicked(mouse_pos, button1) == 2 && !compress) {
+		} 
+		else if (clicked(mouse_pos, button_heat) == 2 && !compress) {
 			button_col[1] = RED;
 			heat = false;
-			/* if (!heat || blocked || compress) vel = 0.f; */
 			if (!heat) vel = 0.f;
 		}
 
-		DrawRectangleRounded(button1, 0.8, 40, button_col[1]);
 
-		// Button to compress the gas
-		DrawText("Compress the gas:", X-270,50,20,WHITE);
+		Rectangle button_compress = {945, 55, 15, 15};
 
-		Rectangle button2 = {945, 55, 15, 15};
-
-		if (clicked(mouse_pos, button2) == 1 && !blocked && !heat) {
+		if (clicked(mouse_pos, button_compress) == 1 && !blocked && !heat) {
 			button_col[2] = GREEN;
 			button_col[0] = RED;
 			vel = 0.2f;
 			compress = true;
 		}
-		else if (clicked(mouse_pos, button2) == 2 && !blocked && !heat) {
+		else if (clicked(mouse_pos, button_compress) == 2 && !blocked && !heat) {
 			button_col[2] = RED;
 			vel = 0.f;
 			compress = false;
 		}
 
-		DrawRectangleRounded(button2, 0.8, 40, button_col[2]);
+
+		BeginDrawing();
+		ClearBackground(GRAY);
+
+		// Draw gas in the chamber
+		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
+
+		DrawRectangleRounded(piston, 0.4, 10, WHITE);
+		DrawRectangleLinesEx(cilinder, 4, RED);
+
+		if (heat) {
+			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
+			DrawText("FLAME", X/2-30, central_y + depth + height + 120, 20,WHITE);
+			if (temp <= 500.f) temp += dtemp;
+		}
+		else {
+			DrawRectangleLinesEx((Rectangle){X/2-width/2-30*scale, Y/2-width/2-30*scale-10, width+60*scale, width+60*scale+10}, 30*scale, (Color){0,155,255,60});
+			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
+		}
+
+		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
+		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
+		DrawText(TextFormat("Volume: %.2f m3", vol), 10,50,20,WHITE);
+
+		DrawText("Block the piston:", X-270,10,20,WHITE);
+		DrawRectangleRounded(button_block, 0.8, 40, button_col[0]);
+
+		DrawText("Heat the gas:", X-270,30,20,WHITE);
+		DrawRectangleRounded(button_heat, 0.8, 40, button_col[1]);
+
+		DrawText("Compress the gas:", X-270,50,20,WHITE);
+		DrawRectangleRounded(button_compress, 0.8, 40, button_col[2]);
 
 		EndDrawing();
 	}
