@@ -70,6 +70,7 @@ int main() {
 	
 	while (!WindowShouldClose()) {
         float dvol = vel/267;
+        /* bool top = false; */
 
 		Vector2 mouse_pos = GetMousePosition();
 
@@ -78,14 +79,16 @@ int main() {
 			vol -= dvol;
 		}
 
-		if (piston.y <= central_y - 0.2) {
-			vel = 0.f;
-			vol = 1.f;
-		} 
-
 		bool isIsotherm = (compress && !blocked && !heat);
 		bool isIsochoric = (blocked && heat && !compress);
 		bool isIsobar = (heat && !blocked && !compress);
+
+		if (piston.y <= central_y - 0.2) {
+            /* top = true; */
+
+			vel = 0.f;
+			vol = 1.f;
+		} 
 
 		if (isIsotherm) {
 			press = isotherm(compress, temp, vol, press, dvol);
@@ -100,7 +103,8 @@ int main() {
 
 		Rectangle button_block = {945, 12, 15, 15};
 
-		if (clicked(mouse_pos, button_block) == 1 && !compress) {
+        // || top to make isochoric at top
+		if ((clicked(mouse_pos, button_block) == 1 && !compress)) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
 			vel = 0;
