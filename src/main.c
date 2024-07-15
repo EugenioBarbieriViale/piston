@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <raylib.h>
 
 #define X 1000
@@ -67,10 +68,18 @@ int main() {
 	ImageResize(&flame_img, 10*scale,20*scale);
 	Texture2D flame_tex = LoadTextureFromImage(flame_img);
 	UnloadImage(flame_img);
+
+    FILE *file;
+    file = fopen("out.csv", "w");
+    fprintf(file, ",press,vol,temp\n");
+    int i = 0;
 	
 	while (!WindowShouldClose()) {
         float dvol = vel/267;
         /* bool top = false; */
+
+        fprintf(file, "%d,%.2f,%.2f,%.2f\n", i, press, vol, temp);
+        i++;
 
 		Vector2 mouse_pos = GetMousePosition();
 
@@ -185,5 +194,6 @@ int main() {
 
 	UnloadTexture(flame_tex);
 	CloseWindow();
+    fclose(file);
 	return 0;
 }
