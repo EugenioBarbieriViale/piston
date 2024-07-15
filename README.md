@@ -13,3 +13,6 @@ It is possible to display only the following three transformations:
 - ISOCHORIC: the piston is blocked and the flame heats the gas. The pressure starts to increase
 - ISOTHERM: the piston compresses the gas, which is mantained at costant temperature with the thermic bath. The pressure starts to increase
 - ISOBAR: the flame heats the gas. Since the piston is free to move and the gas starts expanding, it goes up. The volume starts to increase
+
+# Plot
+The value of pressure, volume and temperature are written to the file ***out.csv***. They can be represented in the vol-press graph, also called Clapeyron's. For this the python libraries [matplotlib](https://pypi.org/project/matplotlib/) and [pandas](https://pypi.org/project/pandas/) are required.
