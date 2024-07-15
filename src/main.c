@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <raylib.h>
 
 #define X 1000
@@ -50,7 +49,6 @@ int main() {
 	float vol = 1;
 
 	float vel = 0.0f;
-	float dvol = vel/267;
 	float dtemp = 0.5/26.7;
 
 	Color button_col[] = {RED, RED, RED};
@@ -71,6 +69,8 @@ int main() {
 	UnloadImage(flame_img);
 	
 	while (!WindowShouldClose()) {
+        float dvol = vel/267;
+
 		Vector2 mouse_pos = GetMousePosition();
 
 		if (piston.y < central_y + depth - 10) {
@@ -147,12 +147,6 @@ int main() {
 		BeginDrawing();
 		ClearBackground(GRAY);
 
-		// Draw gas in the chamber
-		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
-
-		DrawRectangleRounded(piston, 0.4, 10, WHITE);
-		DrawRectangleLinesEx(cilinder, 4, RED);
-
 		if (heat) {
 			DrawTexture(flame_tex, X/2-10, central_y + depth + height + 20, WHITE); // Flame
 			DrawText("FLAME", X/2-30, central_y + depth + height + 120, 20,WHITE);
@@ -162,6 +156,12 @@ int main() {
 			DrawRectangleLinesEx((Rectangle){X/2-width/2-30*scale, Y/2-width/2-30*scale-10, width+60*scale, width+60*scale+10}, 30*scale, (Color){0,155,255,60});
 			DrawText("THERMOSTATIC BATH", X/2-120, central_y + depth + height + 120, 20,WHITE);
 		}
+
+		// Draw gas in the chamber
+		DrawRectangle(piston.x, piston.y+10, width, central_y + depth + height - piston.y-10, (Color){255,255,0,150});
+
+		DrawRectangleRounded(piston, 0.4, 10, WHITE);
+		DrawRectangleLinesEx(cilinder, 4, RED);
 
 		DrawText(TextFormat("Temperature: %.2f K", temp), 10,10,20,WHITE);
 		DrawText(TextFormat("Pressure: %.2f Pa", press), 10,30,20,WHITE);
