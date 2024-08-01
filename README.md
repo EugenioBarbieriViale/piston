@@ -9,8 +9,10 @@ Here it is a screenshot:
 
 # How to run it
 Run in your terminal:
+
 ``` $ make ```
 To show the graph:
+
 ``` $ python3 plot.py ```
 
 # How to use it
