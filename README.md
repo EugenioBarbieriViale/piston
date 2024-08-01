@@ -11,6 +11,7 @@ Here it is a screenshot:
 Run in your terminal:
 
 ``` $ make ```
+
 To show the graph:
 
 ``` $ python3 plot.py ```
