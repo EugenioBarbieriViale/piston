@@ -10,11 +10,15 @@ Here it is a screenshot:
 # How to run it
 Run in your terminal:
 
-``` $ make ```
+```console
+$ make
+```
 
 To show the graph:
 
-``` $ python3 plot.py ```
+```console
+$ python3 plot.py
+```
 
 # How to use it
 There is a command panel at the top right corner. Green means enabled, red means disabled. To enable right-click, to disable left-click.
