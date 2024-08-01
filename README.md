@@ -9,7 +9,7 @@ Here it is a screenshot:
 ![piston](https://github.com/EugenioBarbieriViale/piston/assets/82298389/321a3b40-bbc5-4ac3-aab0-3a07beac0bd0)
 
 # How to run it
-The needed dependencies are: the C graphic library [raylib](https://www.raylib.com/) and for the graphs [matplotlib](https://pypi.org/project/matplotlib/) and [pandas](https://pypi.org/project/pandas/) are required.
+The needed dependencies are: the C graphic library [raylib](https://www.raylib.com/) and [matplotlib](https://pypi.org/project/matplotlib/) and [pandas](https://pypi.org/project/pandas/) for the graphs.
 
 Run in your terminal:
 
