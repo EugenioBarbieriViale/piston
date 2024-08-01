@@ -7,6 +7,10 @@ When a perfect gas is compressed or heated, its macroscopic characteristics (pre
 Here it is a screenshot:
 ![piston](https://github.com/EugenioBarbieriViale/piston/assets/82298389/321a3b40-bbc5-4ac3-aab0-3a07beac0bd0)
 
+# How to run it
+Run in your terminal:
+'$ make'
+
 # How to use it
 There is a command panel at the top right corner. Green means enabled, red means disabled. To enable right-click, to disable left-click.
 It is possible to display only the following three transformations:
