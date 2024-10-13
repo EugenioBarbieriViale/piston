@@ -76,7 +76,6 @@ int main() {
 	
 	while (!WindowShouldClose()) {
         float dvol = vel/267;
-        /* bool top = false; */
 
         fprintf(file, "%d,%.2f,%.2f,%.2f\n", i, press, vol, temp);
         i++;
@@ -93,8 +92,6 @@ int main() {
 		bool isIsobar = (heat && !blocked && !compress);
 
 		if (piston.y <= central_y - 0.2) {
-            /* top = true; */
-
 			vel = 0.f;
 			vol = 1.f;
 		} 
@@ -112,7 +109,6 @@ int main() {
 
 		Rectangle button_block = {945, 12, 15, 15};
 
-        // || top to make isochoric at top
 		if ((clicked(mouse_pos, button_block) == 1 && !compress)) {
 			button_col[0] = GREEN;
 			button_col[2] = RED;
